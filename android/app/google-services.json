@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "857787899648",
+    "project_id": "xcercise-depot",
+    "storage_bucket": "xcercise-depot.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:857787899648:android:04ce91bc61bca733391de5",
+        "android_client_info": {
+          "package_name": "com.example.xcercise_depot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "857787899648-g0t8tvvi1fuahq7r61kmkdbugu8jrh50.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3uKug2sKERyauq4u4DbK2hCrB1kxtvLs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "857787899648-g0t8tvvi1fuahq7r61kmkdbugu8jrh50.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
