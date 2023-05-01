@@ -192,9 +192,7 @@ class UserServices {
         gender: gender,
         phoneNumber: phonenumber,
         dateOfBirth: DOB,
-        rightMac: '',
-        leftMac: '',
-        emailVerified: true);
+    );
 
     // SosModel sosModel = SosModel(
     //     contact1: "983000000",
@@ -276,7 +274,7 @@ class UserServices {
   Future<void> markUserEmailVerified() async {
     User? user = _auth.currentUser;
     await currentDetails();
-    currentUserModel.setEmailVerified(true);
+    // currentUserModel.setEmailVerified(true);
 
     updateUser(currentUserModel);
   }

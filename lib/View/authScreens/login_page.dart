@@ -16,8 +16,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _inputEmail = new TextEditingController();
-  TextEditingController _inputPassword = new TextEditingController();
+  final TextEditingController _inputEmail = new TextEditingController();
+  final TextEditingController _inputPassword = new TextEditingController();
 
   bool handle_password = true;
 
@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
               "images/logo_display.png",
               fit: BoxFit.fill,
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Center(
@@ -127,12 +127,12 @@ class _LoginPageState extends State<LoginPage> {
                     // filledColor:
                     //errorText:null, used for error message display
                     //filled:true
-                    prefixIcon: Icon(
+                    prefixIcon: const Icon(
                       Icons.lock,
                       color: AccentColor,
                     ),
                     suffixIcon: IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.warning,
                         color: AccentColor,
                       ),
@@ -149,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                   maxLines: 1,
                   controller: _inputPassword,
                   validator: (value) {
-                    RegExp regex = new RegExp(r'^.{2,}$');
+                    RegExp regex = RegExp(r'^.{2,}$');
                     if (value!.isEmpty) {
                       return ("Password cannot be empty");
                     }
@@ -173,8 +173,8 @@ class _LoginPageState extends State<LoginPage> {
                 minWidth: 230.0,
                 height: 47,
                 color: AccentColor,
-                child: new Text('Login',
-                    style: new TextStyle(
+                child: const Text('Login',
+                    style: TextStyle(
                         fontSize: 16.0,
                         color: Colors.white,
                         fontWeight: FontWeight.bold)),
