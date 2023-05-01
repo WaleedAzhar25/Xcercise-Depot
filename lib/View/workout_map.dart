@@ -1,28 +1,37 @@
 import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:circular_countdown/circular_countdown.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
-class WorkoutMapScreen extends StatefulWidget {
+
+class WorkoutMapScreen extends ConsumerStatefulWidget {
   const WorkoutMapScreen({Key? key}) : super(key: key);
 
   @override
   _WorkoutMapScreen createState() => _WorkoutMapScreen();
 }
 
-class _WorkoutMapScreen extends State<WorkoutMapScreen> {
+class _WorkoutMapScreen extends ConsumerState<WorkoutMapScreen> {
 // created controller to display Google Maps
   final Completer<GoogleMapController> _controller = Completer();
 
+//on below line we have set the camera position
 
   final Set<Marker> _markers = {};
   final Set<Polyline> _polyline = {};
   final StopWatchTimer _stopWatchTimer = StopWatchTimer(); // Create instance.
 
+  // final _screenshotController = ScreenshotController();
+
+// list of locations to display polylines
   List<LatLng> latLen = [];
   double initialLat = 0.0;
   double initialLon = 0.0;
@@ -79,6 +88,18 @@ class _WorkoutMapScreen extends State<WorkoutMapScreen> {
   }
 
   Uint8List? img;
+  // Future<void> takeSnapShot() async {
+  //   GoogleMapController controller = await _controller.future;
+  //   Future<void>.delayed(const Duration(milliseconds: 1000), () async {
+  //     final imageBytes = await controller.takeSnapshot();
+  //     setState(() {
+  //       img = imageBytes;
+  //     });
+  //     print('say hello');
+  //     print(imageBytes);
+  //     // await saveImage(imageBytes!);
+  //   });
+  // }
 
   markerWithPolyline() {
     for (int i = 0; i < latLen.length; i++) {
@@ -127,7 +148,6 @@ class _WorkoutMapScreen extends State<WorkoutMapScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _getUserCurrentLocation();
     loadData();
     loadData();
   }
@@ -136,6 +156,7 @@ class _WorkoutMapScreen extends State<WorkoutMapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // int provider=ref.watch(stepProvider);
     print('initial Location');
     print(destLat);
     print(destLon);
@@ -172,6 +193,7 @@ class _WorkoutMapScreen extends State<WorkoutMapScreen> {
             const Spacer(),
             IconButton(
               onPressed: () async {
+                // await takeSnapShot();
                 showDialog<void>(
                   context: context,
                   barrierDismissible: false, // user must tap button!
@@ -198,7 +220,7 @@ class _WorkoutMapScreen extends State<WorkoutMapScreen> {
                                       'Run',
                                       style: TextStyle(
                                           fontSize: 16,
-                                          color: Colors.deepPurple,
+                                          color: Colors.orangeAccent,
                                           fontWeight: FontWeight.w500),
                                     )),
                                 Divider(),
@@ -213,7 +235,7 @@ class _WorkoutMapScreen extends State<WorkoutMapScreen> {
                                       'Walk',
                                       style: TextStyle(
                                           fontSize: 16,
-                                          color: Colors.deepPurple,
+                                          color: Colors.orangeAccent,
                                           fontWeight: FontWeight.w500),
                                     )),
                               ],
@@ -251,7 +273,7 @@ class _WorkoutMapScreen extends State<WorkoutMapScreen> {
                   _controller.complete(controller);
                   Timer.periodic(const Duration(seconds: 10), (timer) {
                     loadData();
-                    markerWithPolyline();
+                    press1?'':markerWithPolyline();
                     // takeSnapShot();
                   });
                 },
@@ -334,6 +356,9 @@ class _WorkoutMapScreen extends State<WorkoutMapScreen> {
                             ? GestureDetector(
                           onTap: () {
                             starter = false;
+                            latLen=[];
+                            _polyline.clear();
+
                             Timer.periodic(
                                 const Duration(seconds: 10),
                                     (timer) async {
@@ -341,8 +366,12 @@ class _WorkoutMapScreen extends State<WorkoutMapScreen> {
                                       latLen);
                                 });
                             setState(() {
+                              // _markers.clear();
                               press1 = !press1;
                             });
+
+                            print('Polyliness');
+                            print(_polyline.toString());
                           },
                           child: Container(
                             height: 50,
@@ -395,7 +424,7 @@ class _WorkoutMapScreen extends State<WorkoutMapScreen> {
                                               'Conclusion',
                                               style: TextStyle(
                                                   color:
-                                                  Colors.deepPurple,
+                                                  Colors.orangeAccent,
                                                   fontWeight:
                                                   FontWeight
                                                       .w700,
@@ -415,15 +444,16 @@ class _WorkoutMapScreen extends State<WorkoutMapScreen> {
                                         SizedBox(
                                           height: 30,
                                         ),
-                                        Text(
-                                          'Steps : ' +
-                                              steps.toString(),
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight:
-                                              FontWeight.w600,
-                                              fontSize: 20),
-                                        ),
+                                            Text(
+                                              'Steps : ' +
+                                                  steps.toString(),
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight:
+                                                  FontWeight.w600,
+                                                  fontSize: 20),
+                                            ),
+
                                         SizedBox(
                                           height: 30,
                                         ),
@@ -439,7 +469,44 @@ class _WorkoutMapScreen extends State<WorkoutMapScreen> {
                                     ),
                                   );
                                 });
-                            },
+
+                            // Future<void>.delayed(const Duration(milliseconds: 1000), () async {
+                            //    showDialog<void>(
+                            //     context: context,
+                            //     barrierDismissible: false, // user must tap button!
+                            //     builder: (BuildContext context) {
+                            //       return AlertDialog(
+                            //         content: SingleChildScrollView(
+                            //           child: Column(
+                            //             crossAxisAlignment: CrossAxisAlignment.start,
+                            //             children: [
+                            //               IconButton(onPressed: (){
+                            //                 Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_)=>WorkoutMapScreen()));
+                            //               },
+                            //                   icon: Icon(Icons.arrow_back_sharp,size: 28,color: Colors.black,)),
+                            //               SizedBox(height: 50,),
+                            //               Text('Distance :     $result KM',style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 20),),
+                            //               SizedBox(height: 50,),
+                            //               Text('Steps :         200',style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 20),),
+                            //               SizedBox(height: 50,),
+                            //               Text('Duration :      $duration',style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 20),),
+                            //               SizedBox(height: 50,),
+                            //               Container(
+                            //                 height: 200,
+                            //                 width: 200,
+                            //                 child: Image.memory(img!),
+                            //               )
+                            //             ],
+                            //           ),
+                            //         ),
+                            //       );
+                            //     },
+                            //   );
+                            // });
+
+                            // Navigator.push(context, MaterialPageRoute(builder: (_)=>DetailsWorkoutMapScreen(distance: result.toString(), steps: '200', duration: duration.toString(), image: path,
+                            //  )));
+                          },
                           child: Container(
                             height: 50,
                             width: 250,
@@ -490,4 +557,32 @@ class _WorkoutMapScreen extends State<WorkoutMapScreen> {
     );
   }
 
+  // void _takeScreenshot() async {
+  //  final imageFile = await _screenshotController.capture();
+  //  await saveImage(imageFile!);
+  //  // final image=File.fromRawPath(imageFile!);
+  //  // final directory = await getApplicationDocumentsDirectory();
+  //  // final pathOfImage = await File('${directory.path}').create();
+  //  // final Uint8List bytes = imageFile.buffer.asUint8List();
+  //  // await pathOfImage.writeAsBytes(bytes);
+  //  // print('hello');
+  //  // print(image.path);
+  //  // // await GallerySaver.saveImage(imageFile);
+  //  // print(image.path);
+  //  //
+  //  // setState(() {
+  //  //   path=image.path;
+  //  // });
+  //
+  // }
+  // Future<String> saveImage(Uint8List bytes) async {
+  //   await [Permission.storage].request();
+  //   final time = DateTime.now()
+  //       .toIso8601String()
+  //       .replaceAll('.', '_')
+  //       .replaceAll(':', '_');
+  //   final name = 'screenshot_$time';
+  //   final result = await ImageGallerySaver.saveImage(bytes, name: name);
+  //   return result['filePath'];
+  // }
 }
